@@ -14,6 +14,9 @@ var create_new_video = function(width, height, video_src, link_src){
 }
 
 var replace_object = function(o){
+    if (o.x_html5_to_video == 'yes'){
+        return;
+    }
     var src = o.data;
     var type = o.type;
     if (o.getElementsByTagName("embed").length > 0) {
@@ -22,21 +25,23 @@ var replace_object = function(o){
         type = e.type;
     }
     if (type = 'application/x-shockwave-flash' && src.search("http://(www\.)?youtube.com/v/") == 0) {
-        console.debug("replace o!");
         o.outerHTML = create_new_video(
             o.width, o.height,
             src.replace(/youtube.com\/v\/(\w+)([^\"\']*)/, "youtube.com/embed/$1"),
             src.replace("?", "&").replace("youtube.com/v/", "youtube.com/watch?v=")
         );
+    } else {
+        o.x_html5_to_video = 'yes';
     }
 }
 
 var do_replace = function(scope){
     if (scope != document && scope.nodeType != 1)
         return
-    //console.debug(scope);
-    if (scope.tagName == "OBJECT" || scope.tagName == "EMBED")
+    if (scope.tagName == "OBJECT" || scope.tagName == "EMBED") {
         replace_object(scope);
+        return;
+    }
 
     var objects = scope.getElementsByTagName("object");
     for (var i = 0; i < objects.length; ++i) {
@@ -44,8 +49,7 @@ var do_replace = function(scope){
     }
 }
 
-document.body.addEventListener("DOMNodeInserted", function(event){ 
+document.addEventListener("DOMNodeInserted", function(event){ 
     do_replace(event.target);
 });
-
 do_replace(document);
