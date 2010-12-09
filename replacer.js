@@ -27,7 +27,7 @@ var replace_object = function(o){
     if (type = 'application/x-shockwave-flash' && src.search("http://(www\.)?youtube.com/v/") == 0) {
         o.outerHTML = create_new_video(
             o.width, o.height,
-            src.replace(/youtube.com\/v\/(\w+)([^\"\']*)/, "youtube.com/embed/$1"),
+            src.replace(/youtube.com\/v\/([\w-]+)([^\"\']*)/, "youtube.com/embed/$1"),
             src.replace("?", "&").replace("youtube.com/v/", "youtube.com/watch?v=")
         );
     } else {
