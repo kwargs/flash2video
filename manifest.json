@@ -5,16 +5,15 @@
       "matches": [ "http://*/*" ],
       "run_at": "document_end"
    } ],
+
    "description": "Automatically replaces embedded *tube flash player to html5 player",
    "icons": {
-      "128": "images/h5tube.png",
-      "16": "images/h5tube_16.png",
-      "48": "images/h5tube_48.png"
+      "128": "images/icon.png",
+      "16": "images/icon-16.png",
+      "48": "images/icon-48.png"
    },
    "permisions": ["http://*/*"],
 
-//   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChMec1a1AfT9h/3iJ5LhFKYO3nhGY+OuWe7Z4FziUlBy01r8Ou+B0QUMmFhLV56/WhTCBxxkYWZKUfqDPqh7p3ERIJc6n2S+g0MkiFsvA+KcvWFbb/t2vmji8A3BvKbcj7c/k48pC2TB8OLvRhALKTDoUac5mpbWTtVwsHM/XgLQIDAQAB",
-   "name": "Html5Tube-Mod",
-//   "update_url": "http://clients2.google.com/service/update2/crx",
-   "version": "0.42"
+   "name": "Flash to Video",
+   "version": "0.1"
 }
