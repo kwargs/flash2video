@@ -4,6 +4,7 @@ var create_new_video = function(width, height, video_src, link_src){
     newVideo.height = height;
     newVideo.width = width;
     newVideo.src = video_src;
+    newVideo.frameBorder = "0";
 
     var newLink = document.createElement("a")
     newLink.innerHTML = "*";
@@ -24,32 +25,59 @@ var replace_object = function(o){
         src = e.src;
         type = e.type;
     }
-    if (type = 'application/x-shockwave-flash' && src.search("http://(www\.)?youtube.com/v/") == 0) {
-        o.outerHTML = create_new_video(
-            o.width, o.height,
-            src.replace(/youtube.com\/v\/([\w-]+)([^\"\']*)/, "youtube.com/embed/$1"),
-            src.replace("?", "&").replace("youtube.com/v/", "youtube.com/watch?v=")
-        );
+    //console.debug(o);
+    //console.debug(src);
+    if (type == 'application/x-shockwave-flash'){
+        //console.debug('maybe video');
+        var iframe_src, link_src;
+        if (src.search("http://(www\.)?youtube.com/v/") == 0) {
+            //console.debug('yourtube');
+            iframe_src = src.replace(/youtube.com\/v\/([\w-]+)([^\"\']*)/, "youtube.com/embed/$1");
+            link_src = src.replace("?", "&").replace("youtube.com/v/", "youtube.com/watch?v=");
+        } else if (src.search('http://vimeo.com') == 0) {
+            //console.debug('vimeo');
+            var clip_id = src.replace(/http:\/\/.*clip_id=(\d+).*/, '$1')
+            iframe_src = 'http://player.vimeo.com/video/' + clip_id;
+            link_src = 'http://vimeo.com/' + clip_id;
+        }
+        if (iframe_src && link_src) {
+        //console.debug("try replace");
+            o.outerHTML = create_new_video(
+                o.width, o.height,
+                iframe_src,
+                link_src
+            );
+        }
     } else {
+        //console.debug('ingore');
         o.x_html5_to_video = 'yes';
     }
 }
 
-var do_replace = function(scope){
-    if (scope != document && scope.nodeType != 1)
+var do_replace = function(scope, why){
+    if (scope != document && scope.nodeType != 1) {
+    //    console.debug('ignore scope');
+     //   console.debug(scope);
         return
-    if (scope.tagName == "OBJECT" || scope.tagName == "EMBED") {
+    }
+    //console.debug(why);
+    if (scope.tagName == "OBJECT") {
         replace_object(scope);
+        return;
+    }
+    if (scope.tagName == "EMBED" && scope.parentNode) {
+        replace_object(scope.parentNode);
         return;
     }
 
     var objects = scope.getElementsByTagName("object");
     for (var i = 0; i < objects.length; ++i) {
+        //console.debug(why);
         replace_object(objects[i]);
     }
 }
 
 document.addEventListener("DOMNodeInserted", function(event){ 
-    do_replace(event.target);
+    do_replace(event.target, 'bind');
 });
-do_replace(document);
+do_replace(document, 'doc');

@@ -2,7 +2,10 @@
    "content_scripts": [ {
       "all_frames": true,
       "js": [ "replacer.js" ],
-      "matches": [ "http://*/*" ],
+      "matches": [ 
+        "http://*/*",
+        "file://*/*.html"
+      ],
       "run_at": "document_end"
    } ],
 
